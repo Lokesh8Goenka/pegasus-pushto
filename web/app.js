@@ -41,7 +41,12 @@ let lastDataAt = 0;
 let mpuMissing = false;
 let current = null;       // { alt, az } of the selected target
 
+let linesSeen = 0;
+let lastLine = '';
+
 function onLine(line) {
+  linesSeen++;
+  lastLine = line;
   const parts = line.split(',');
   if (parts[0] === 'D' && parts.length >= 5) {
     const ax = +parts[1], ay = +parts[2], az = +parts[3];
@@ -73,6 +78,7 @@ async function connect(kind) {
   }
   try {
     sensorAlt = null;
+    linesSeen = 0; lastLine = '';
     link = await openLink(kind, onLine, onLinkClosed, () => +$('demoAlt').value);
     linkKind = kind;
     lastDataAt = Date.now();
@@ -199,6 +205,10 @@ function render() {
   $('syncInfo').textContent = bits.length
     ? `Synced: ${bits.join(' and ')}. Sync again if the tripod is moved.`
     : 'Not synced. Centre a bright target by hand first, then sync.';
+
+  $('diag').textContent = link
+    ? `Link: ${linkKind}. Lines received: ${linesSeen}. Last: ${lastLine.slice(0, 40) || 'nothing yet'}`
+    : 'Not connected.';
 
   // Light sensor
   $('lightCard').hidden = !(settings.lightOn && sensorLive());
