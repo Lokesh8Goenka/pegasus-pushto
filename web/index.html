@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Pegasus Push-To</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Pegasus Push-To</h1>
+  <button id="connBtn" class="chip" type="button">Connect sensor</button>
+</header>
+
+<main>
+  <p id="banner" class="banner" hidden></p>
+
+  <section class="card">
+    <label for="target">Target</label>
+    <select id="target"></select>
+    <div class="row small">
+      <span>Altitude <b id="tAlt">–</b></span>
+      <span>Azimuth <b id="tAz">–</b></span>
+      <span id="tNote"></span>
+    </div>
+  </section>
+
+  <section class="card guide" id="altCard">
+    <h2>Up / down</h2>
+    <div class="big"><span id="altArrow" class="arrow"></span><span id="altValue">–</span></div>
+    <p id="altHint" class="small"></p>
+  </section>
+
+  <section class="card guide" id="azCard">
+    <h2>Left / right</h2>
+    <div class="big"><span id="azValue">–</span></div>
+    <p id="azHint" class="small"></p>
+  </section>
+
+  <button id="syncBtn" class="primary" type="button">Sync on this target</button>
+  <p id="syncInfo" class="small center"></p>
+
+  <section class="card" id="lightCard" hidden>
+    <h2>Sky light</h2>
+    <div class="bar"><div id="lightBar"></div></div>
+    <p class="small"><span id="lightValue">–</span> / 1023</p>
+  </section>
+
+  <details class="card">
+    <summary>Settings</summary>
+
+    <h3>Location</h3>
+    <div class="row">
+      <label>Latitude <input id="lat" type="number" step="0.0001" inputmode="decimal"></label>
+      <label>Longitude <input id="lon" type="number" step="0.0001" inputmode="decimal"></label>
+    </div>
+    <button id="gpsBtn" type="button">Use phone location</button>
+
+    <h3>Dial</h3>
+    <label class="check"><input id="dialRev" type="checkbox"> Dial numbers go down when the telescope turns right</label>
+    <p class="small"><a href="dial.html">Print the degree strip for the post</a></p>
+
+    <h3>Sensors</h3>
+    <label class="check"><input id="lightOn" type="checkbox"> Light sensor is wired to A0</label>
+    <button id="altConnBtn" type="button">Connect using the other USB method</button>
+    <button id="demoBtn" type="button">Demo mode (no sensor)</button>
+    <div id="demoBox" hidden>
+      <label>Simulated tube angle <span id="demoVal">30</span>°
+        <input id="demoAlt" type="range" min="-10" max="90" step="0.5" value="30">
+      </label>
+    </div>
+
+    <h3>Reset</h3>
+    <button id="resetBtn" type="button">Clear sync</button>
+  </details>
+</main>
+
+<dialog id="syncDlg">
+  <form method="dialog">
+    <h2>Sync on <span id="syncName"></span></h2>
+    <ol class="small">
+      <li>Centre it in the eyepiece.</li>
+      <li>Read the number under the pointer on the paper dial.</li>
+    </ol>
+    <label>Dial reading (0–360). Leave empty if the dial is not fitted yet
+      <input id="syncDial" type="number" min="0" max="360" step="0.5" inputmode="decimal">
+    </label>
+    <div class="row">
+      <button value="cancel" formnovalidate>Cancel</button>
+      <button id="syncOk" value="ok" class="primary">Sync</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="vendor/astronomy.browser.min.js"></script>
+<script src="targets.js"></script>
+<script src="serial.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
